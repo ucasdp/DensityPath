@@ -1,6 +1,7 @@
 
 
 rm(list=ls())
+# we need to install and library the following R packages
 library("TDA")
 library("gdistance")
 library("raster")
@@ -9,23 +10,29 @@ library("shape")
 library("destiny")
 library('R.matlab')
 
-
+# read the data files
 path<-('～/densitypath')
 pathname<-file.path(path,'testsamples6.mat')
 treedata<-readMat(pathname)
 X1<-as.matrix(treedata$testsamples6)
 XX<-X1[,1:2]
 
+# set the parameters of density clustering
 k<-50
 h<-0.3
 
+# the function of DensityPath 
 DensityPath<-function(XX,k,h){
   densitypath<-list()
   
+  # reduce the dimensionality of scRNAseq data
   if(ncol(XX)!=2){
     XX<-DiffusionMap(XX,k=2)
   }
+  #######################################################################
+  # Density clustering
 
+  # call the clusterTree function in the TDA package, then get the density clusters idKDE
   TreeKDE <- clusterTree(XX, k = k, h = h, density = "kde",
                          printProgress = FALSE)
   densityKDE<-TreeKDE$density
@@ -33,6 +40,10 @@ DensityPath<-function(XX,k,h){
 
   idKDE<-setdiff(TreeKDE$id,TreeKDE$parent)
   numKDEleaves<-length(idKDE)
+  
+  ########################################################################
+  
+  # Select high density clusters as the representative cell states
   l<-1
   KDEdensitypeaks<-matrix(1,numKDEleaves,2)
   for (i in idKDE){
@@ -41,7 +52,10 @@ DensityPath<-function(XX,k,h){
     l<-l+1
   }
   
+  #########################################################################
+  # Construct the cell state-transition path
   
+  # divide the grid
   xmin <-min(XX)
   xmax<-max(XX)
   ymin<-min(XX)
@@ -71,10 +85,9 @@ DensityPath<-function(XX,k,h){
   Yseq <- seq(Ylim[2],Ylim[1], by = -by)
   Grid <- expand.grid(Xseq, Yseq)
   
-  ###################################################
+  # calculate the density on the grid,and form a density surface
   KDE <- kde(X = XX, Grid = Grid, h = h)
   
-
   r <- raster(nrows=numy, ncols=numx, xmn=xmin, xmx=xmax, ymn=ymin, ymx=ymax,crs="+proj=utm +units=m")
   r[] <- KDE
   T <- transition(r, function(x) mean(x), 8)
@@ -82,16 +95,23 @@ DensityPath<-function(XX,k,h){
   T <- geoCorrection(T)
   C <-KDEdensitypeaks
   D <-KDEdensitypeaks
+                  
+  # use the costDistance function in the gdistance package to calculate the geodesic distance between any two density peaks of the mesh surface
   dis<- costDistance(T, C, D)
+ 
+  # calculate the minimun spanning tree by calling the spantree function in the vegan package using the geodesic distance matrix.
   spanningtree <- spantree(dis)
   
+  #######################################################################
+  # Output of the graph
   pdf("output.pdf")
   par(mfrow = c(2,2))
   par(mai = c(0.7,0.7,0.3,0.4))
-  #2维投影
+
+  # 2-dimensional projection
   plot(XX, pch = 19, cex = 0.6, main = "2D mapping of single cell points",xlab="",ylab="")
   
-  #3维密度曲面
+  # 3-dimensional density surface
   Xseq <- seq(Xlim[1], Xlim[2], by = by)
   Yseq <- seq(Ylim[1],Ylim[2], by = by)
   Grid <- expand.grid(Xseq, Yseq)
@@ -111,7 +131,7 @@ DensityPath<-function(XX,k,h){
              axes=F
   )
   
-  #离散的density clusters
+  # discrete density clusters
   plot(1:5,1:5,xlim=c(xmin,xmax),ylim=c(ymin,ymax),type = "n",main = "Density clusters",xlab="",ylab="")
   c<-1
   for (i in idKDE){
@@ -119,7 +139,7 @@ DensityPath<-function(XX,k,h){
     c<-c+1
   }
   
-  #density path
+  # density path
   p<-matrix(1,2,2)
   plot(r,xlim=c(xmin,xmax),ylim=c(ymin,ymax),main="Density path",xlab="",ylab="")
   KDEidspantree<-spanningtree$kid
@@ -167,7 +187,13 @@ DensityPath<-function(XX,k,h){
     minspantreepath<-c(minspantreepath,list(pathpoints))
   }
   dev.off()
-  
+                  
+  #######################################################################                
+  # Return value                
+  # Returns the density path, which contains the estimated density of the sample points(densityKDE),
+  #               the two-dimensional coordinates of the density peaks(KDEdensitypeaks), 
+  #               the geodesic distance between the density peaks(dis), 
+  #               and the path of the minimum spanning tree on the three-dimensional density surface(minspantreepath).
   densitypath<-c(densitypath,densityKDE=list(densityKDE))
   densitypath<-c(densitypath,KDEdensitypeaks=list(KDEdensitypeaks))
   densitypath<-c(densitypath,peaksdistance=list(dis))
@@ -176,7 +202,8 @@ DensityPath<-function(XX,k,h){
   return(densitypath)
 }
 
-
+####################################################################### 
+# Call format of function
 datadesitypath<-DensityPath(XX,k,h)
 
 
