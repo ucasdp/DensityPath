@@ -1,7 +1,7 @@
 
 
 rm(list=ls())
-# we need to install and library the following R packages
+# Install and library the following R packages
 library("TDA")
 library("gdistance")
 library("raster")
@@ -10,14 +10,14 @@ library("shape")
 library("destiny")
 library('R.matlab')
 
-# read the data files
+# Read the data files
 path<-('～/densitypath')
 pathname<-file.path(path,'testsamples6.mat')
 treedata<-readMat(pathname)
 X1<-as.matrix(treedata$testsamples6)
 XX<-X1[,1:2]
 
-# set the parameters of density clustering
+# Set the parameters of density clustering
 k<-50
 h<-0.3
 
@@ -25,7 +25,7 @@ h<-0.3
 DensityPath<-function(XX,k,h){
   densitypath<-list()
   
-  # reduce the dimensionality of scRNAseq data
+  # Reduce the dimensionality of scRNAseq data
   if(ncol(XX)!=2){
     XX<-DiffusionMap(XX,k=2)
   }
@@ -91,7 +91,6 @@ DensityPath<-function(XX,k,h){
   r <- raster(nrows=numy, ncols=numx, xmn=xmin, xmx=xmax, ymn=ymin, ymx=ymax,crs="+proj=utm +units=m")
   r[] <- KDE
   T <- transition(r, function(x) mean(x), 8)
-  # 1/mean: reciprocal to get permeability
   T <- geoCorrection(T)
   C <-KDEdensitypeaks
   D <-KDEdensitypeaks
@@ -190,7 +189,7 @@ DensityPath<-function(XX,k,h){
                   
   #######################################################################                
   # Return value                
-  # Returns the density path, which contains the estimated density of the sample points(densityKDE),
+  # return the density path, which contains the estimated density of the sample points(densityKDE),
   #               the two-dimensional coordinates of the density peaks(KDEdensitypeaks), 
   #               the geodesic distance between the density peaks(dis), 
   #               and the path of the minimum spanning tree on the three-dimensional density surface(minspantreepath).
