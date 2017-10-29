@@ -202,7 +202,7 @@ DensityPath<-function(XX,k,h){
 }
 
 ####################################################################### 
-# Examples of calling functions
+# Examples of calling function
 datadesitypath<-DensityPath(XX,k,h)
 
 
