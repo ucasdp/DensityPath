@@ -8,3 +8,5 @@ The main steps for DensityPath are as follows:
 2.Estimate the density function (landscape) and the level sets.
 3.Select high density clusters as the RCSs.
 4.Construct the cell state-transition path.
+
+The DensityPath function will output the figure of density path and return the list variable, "densitypath", which contains the estimated density of the sample points, the two-dimensional coordinates of the density peaks, the geodesic distance between the density peaks, and the path of the minimum spanning tree on the three-dimensional density surface.
