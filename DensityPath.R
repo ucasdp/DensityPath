@@ -12,9 +12,9 @@ library('R.matlab')
 
 # Read the data files
 path<-('～/densitypath')
-pathname<-file.path(path,'testsamples6.mat')
+pathname<-file.path(path,'testsamples.mat')
 treedata<-readMat(pathname)
-X1<-as.matrix(treedata$testsamples6)
+X1<-as.matrix(treedata$testsamples)
 XX<-X1[,1:2]
 
 # Set the parameters of density clustering
