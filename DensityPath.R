@@ -25,12 +25,12 @@ h<-0.3
 DensityPath<-function(XX,k,h){
   densitypath<-list()
   
-  # Reduce the dimensionality of scRNAseq data
+  # step1:Reduce the dimensionality of scRNAseq data
   if(ncol(XX)!=2){
     XX<-DiffusionMap(XX,k=2)
   }
   #######################################################################
-  # Density clustering
+  # step2:Estimate the density function (landscape) and the level sets.
 
   # call the clusterTree function in the TDA package, then get the density clusters idKDE
   TreeKDE <- clusterTree(XX, k = k, h = h, density = "kde",
@@ -43,7 +43,7 @@ DensityPath<-function(XX,k,h){
   
   ########################################################################
   
-  # Select high density clusters as the representative cell states
+  # stpe3:Select high density clusters as the representative cell states
   l<-1
   KDEdensitypeaks<-matrix(1,numKDEleaves,2)
   for (i in idKDE){
@@ -53,7 +53,7 @@ DensityPath<-function(XX,k,h){
   }
   
   #########################################################################
-  # Construct the cell state-transition path
+  # step4:Construct the cell state-transition path
   
   # divide the grid
   xmin <-min(XX)
