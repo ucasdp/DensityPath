@@ -206,7 +206,7 @@ DensityPath<-function(XX,k,h,SI_fig_dir){
 
 ####################################################################### 
 # Examples of calling function
-datadensitypath<-DensityPath(XX,k,h)
+datadensitypath<-DensityPath(XX,k,h,SI_fig_dir)
 
 
 
