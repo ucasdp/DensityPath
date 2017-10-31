@@ -106,7 +106,8 @@ DensityPath<-function(XX,k,h,SI_fig_dir){
   
   #######################################################################
   # Output of the graph
-  pdf(paste(SI_fig_dir, "DensityPath.pdf", sep = ''))
+  setwd(SI_fig_dir)
+  pdf("DensityPath.pdf")
   par(mfrow = c(2,2))
   par(mai = c(0.7,0.4,0.4,0.4),oma=c(0.7,0.7,0.7,0.7))
 
