@@ -1,5 +1,4 @@
 
-
 rm(list=ls())
 # Install and library the following R packages
 library("TDA")
@@ -9,6 +8,7 @@ library("vegan")
 library("shape")
 library("destiny")
 library('R.matlab')
+
 
 # Read the data files
 path<-('～/densitypath')
@@ -34,13 +34,13 @@ DensityPath<-function(XX,k,h,SI_fig_dir){
   }
   #######################################################################
   # step2:Estimate the density function (landscape) and the level sets.
-
+  
   # call the clusterTree function in the TDA package, then get the density clusters idKDE
   TreeKDE <- clusterTree(XX, k = k, h = h, density = "kde",
                          printProgress = FALSE)
   densityKDE<-TreeKDE$density
- 
-
+  
+  
   idKDE<-setdiff(TreeKDE$id,TreeKDE$parent)
   numKDEleaves<-length(idKDE)
   
@@ -97,10 +97,10 @@ DensityPath<-function(XX,k,h,SI_fig_dir){
   T <- geoCorrection(T)
   C <-KDEdensitypeaks
   D <-KDEdensitypeaks
-                  
+  
   # use the costDistance function in the gdistance package to calculate the geodesic distance between any two density peaks of the mesh surface
   dis<- costDistance(T, C, D)
- 
+  
   # calculate the minimun spanning tree by calling the spantree function in the vegan package using the geodesic distance matrix.
   spanningtree <- spantree(dis)
   
@@ -110,7 +110,7 @@ DensityPath<-function(XX,k,h,SI_fig_dir){
   pdf("DensityPath.pdf")
   par(mfrow = c(2,2))
   par(mai = c(0.7,0.4,0.4,0.4),oma=c(0.7,0.7,0.7,0.7))
-
+  
   # 2-dimensional projection
   plot(XX, pch = 19, cex = 0.6, main = "2D mapping of single cell points",xlab="",ylab="")
   
@@ -190,7 +190,7 @@ DensityPath<-function(XX,k,h,SI_fig_dir){
     minspantreepath<-c(minspantreepath,list(pathpoints))
   }
   dev.off()
-                  
+  
   #######################################################################                
   # Return value                
   # return the density path, which contains the estimated density of the sample points(densityKDE),
@@ -201,17 +201,14 @@ DensityPath<-function(XX,k,h,SI_fig_dir){
   densitypath<-c(densitypath,KDEdensitypeaks=list(KDEdensitypeaks))
   densitypath<-c(densitypath,peaksdistance=list(dis))
   densitypath<-c(densitypath,minspantreepath=list(minspantreepath))
-
+  
   return(densitypath)
 }
 
 ####################################################################### 
 # Examples of calling function
 datadensitypath<-DensityPath(XX,k,h,SI_fig_dir)
-
-
-
-
-
-
-
+                  
+                  
+                  
+                  
