@@ -21,8 +21,11 @@ XX<-X1[,1:2]
 k<-50
 h<-0.3
 
+# Set the path of graphic output
+SI_fig_dir <- "～/densitypath"
+
 # the function of DensityPath 
-DensityPath<-function(XX,k,h){
+DensityPath<-function(XX,k,h,SI_fig_dir){
   densitypath<-list()
   
   # step1:Reduce the dimensionality of scRNAseq data
@@ -103,9 +106,9 @@ DensityPath<-function(XX,k,h){
   
   #######################################################################
   # Output of the graph
-  pdf("output.pdf")
+  pdf(paste(SI_fig_dir, "DensityPath.pdf", sep = ''))
   par(mfrow = c(2,2))
-  par(mai = c(0.7,0.7,0.3,0.4))
+  par(mai = c(0.7,0.4,0.4,0.4),oma=c(0.7,0.7,0.7,0.7))
 
   # 2-dimensional projection
   plot(XX, pch = 19, cex = 0.6, main = "2D mapping of single cell points",xlab="",ylab="")
