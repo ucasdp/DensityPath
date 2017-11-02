@@ -11,11 +11,11 @@ The main steps for DensityPath are as follows:
 5.Map the single cells onto the cell state-transition path.
 
 The code is running as follows:
-1.Read the data files.
-2.Set the parameters of density clustering k and h.
-3.Set the path of graphic output.
-4.Select the points that needs to be mapped to the density path.
-5.Call the function: DensityPath(XX,k,h,SI_fig_dir,X), where XX represents the data in the step1 ,k and h are parameters of density clustering in step2, SI_fig_dir represents the path of graphic output in step3, x represents the points that need to be mapped to the density path in step4.
+(1).Read the data files.
+(2).Set the parameters of density clustering k and h.
+(3).Set the path of graphic output.
+(4).Select the points that needs to be mapped to the density path.
+(5).Call the function: DensityPath(XX,k,h,SI_fig_dir,X), where XX represents the data in (1) ,k and h are parameters of density clustering in (2), SI_fig_dir represents the path of graphic output in (3), x represents the points that need to be mapped to the density path in (4).
 
 
 The DensityPath function will output the figure of density path and mapping path, then return the list variable, "densitypath", which contains "densityKDE", "KDEdensitypeaks", "dis", "minspantreepath" and "minadjpaths". 
