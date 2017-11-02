@@ -25,3 +25,6 @@ The DensityPath function will output the figure of density path and mapping path
 "Minspantreepath" represents the paths of the minimum spanning tree on the three-dimensional density surface.
 "Minadjpaths" represents the the mapping paths for the points.
 
+
+Example data is a the simulated dataset (testdata.csv) which contains 2480 data points on the two-dimensional space by sampling independently from 7 classes of bivariate normal distributions. The data has 3 columns, the first two columns are the two-dimensional coordinates of the points, and the third column represents the categories that the points belong to.
+
