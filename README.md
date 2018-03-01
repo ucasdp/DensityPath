@@ -1,29 +1,18 @@
 # DensityPath
-A novel algorithm, DensityPath, which accurately and efficiently reconstructs the underlying cell developmental trajectories for large-scale scRNAseq data.
+The novel algorithm, DensityPath can accurately and efficiently reconstruct the underlying cell developmental trajectories for large-scale scRNAseq data. 
 
-DensityPath, that can accurately and efficiently reconstruct the underlying cell developmental trajectories for large-scale scRNAseq data. DensityPath algorithm not only extract the separate high density representative cell states(RCSs) to handling the heterogeneous scRNAseq data accurately based on the powerful level-set cluster method, but also constructs cell state-transition path by finding the shortest paths (geodesic) of the representative cell states on the surface of density landscape.
-
-The main steps for DensityPath are as follows:
-1.Reduce the dimensionality of scRNAseq data and set the parameters of density clustering k and h. 
-2.Estimate the density function (landscape) and the level sets.
-3.Select high density clusters as the RCSs.
-4.Construct the cell state-transition path.
-5.Map the single cells onto the cell state-transition path.
-
-The code is running as follows:
-(1).Read the data files.
-(2).Set the path of graphic output.
-(3).Select the points that needs to be mapped to the density path.
-(4).Call the function: DensityPath(XX,SI_fig_dir) or DensityPath(XX,SI_fig_dir,X), where XX represents the data in (1), SI_fig_dir represents the path of graphic output in (2), x represents the points that need to be mapped to the density path in (3).
+The code is runned as follows: 
+(1) source the function: "after_pca", "densitypathimage" and "dens_bran_pseu"; 
+(2) load gene expression data as OriginalData, each row of data represents one cell and each column represents one gene; 
+(3) use function "after_pca(OriginalData)" to reduce dimensionality for data using PCA, and save the CSV file of the data after PCA; 
+(4) load the CSV file of the data after PCA in Matlab, perform elastic embedding(EE) for reducing dimensionality to 2D and save the 2D data after EE as X; 
+(5) load X in R, call the function "densitypathimage(X)" to obtain the trajectory using DensityPath algorithm; 
+(6) call the function " dens_bran_pseu (X)" to get the assignment of branches and pseudotime of each cell.
 
 
-The DensityPath function will output the figure of density path and mapping path, then return the list variable, "densitypath", which contains "densityKDE", "KDEdensitypeaks", "dis", "minspantreepath" and "minadjpaths". 
-"DensityKDE" represents the estimated density of the sample points.
-"KDEdensitypeaks" represents the two-dimensional coordinates of the density peaks.
-"Dis" represents the geodesic distance between the density peaks.
-"Minspantreepath" represents the paths of the minimum spanning tree on the three-dimensional density surface.
-"Minadjpaths" represents the the mapping paths for the points.
+Output: 
+(1) the function "densitypathimage()" will output a 2×2 figure of DensityPath, which are the scatter plot of single cell points on the reduced-dimension 2-d space of gene expression after dimensionality reduction, density landscape, high density clusters and the cell state-transition path constructed by DensityPath on the 2-d density function heatmap plot, respectively;
+(2) the function "dens_bran_pseu()" will return the list variable, which contains "RCSs", "pseudotime", "pseudobran", "MSTtree", "allpath". "RCSs" represents the cells contained in each high density cluster of representative cell states (RCSs). "pseudotime" represents the pesudotime calculated using DensityPath algorithm for each cell. "pseudobran" represents the cells contained in each branch assigned by DensityPath algorithm. "MSTtree" represents the minimum spanning tree of the path. "allpath" represents the labels and 2D coordinates of the peak points in each density cluster, which are on the path from the start density cluster to the end of each branch.
 
 
-Example data is a simulated dataset (testdata.csv) which contains 2480 data points on the two-dimensional space by sampling independently from 7 classes of bivariate normal distributions. The data has 3 columns, the first two columns are the two-dimensional coordinates of the points, and the third column represents the categories that the points belong to.
-
+Example: Example data is a simulated dataset (s8971.mat, the dataset utilized here was from the material of [38]) which is charactered by 475 cells and 48 genes.
