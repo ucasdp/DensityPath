@@ -2,17 +2,17 @@
 The novel algorithm, DensityPath can accurately and efficiently reconstruct the underlying cell developmental trajectories for large-scale scRNAseq data. 
 
 The code is runned as follows: 
-(1) source the function: "after_pca", "densitypathimage" and "dens_bran_pseu"; 
-(2) load gene expression data as OriginalData, each row of data represents one cell and each column represents one gene; 
-(3) use function "after_pca(OriginalData)" to reduce dimensionality for data using PCA, and save the CSV file of the data after PCA; 
-(4) load the CSV file of the data after PCA in Matlab, perform elastic embedding(EE) for reducing dimensionality to 2D and save the 2D data after EE as X; 
-(5) load X in R, call the function "densitypathimage(X)" to obtain the trajectory using DensityPath algorithm; 
-(6) call the function " dens_bran_pseu (X)" to get the assignment of branches and pseudotime of each cell.
-
-
-Output: 
-(1) the function "densitypathimage()" will output a 2×2 figure of DensityPath, which are the scatter plot of single cell points on the reduced-dimension 2-d space of gene expression after dimensionality reduction, density landscape, high density clusters and the cell state-transition path constructed by DensityPath on the 2-d density function heatmap plot, respectively;
-(2) the function "dens_bran_pseu()" will return the list variable, which contains "RCSs", "pseudotime", "pseudobran", "MSTtree", "allpath". "RCSs" represents the cells contained in each high density cluster of representative cell states (RCSs). "pseudotime" represents the pesudotime calculated using DensityPath algorithm for each cell. "pseudobran" represents the cells contained in each branch assigned by DensityPath algorithm. "MSTtree" represents the minimum spanning tree of the path. "allpath" represents the labels and 2D coordinates of the peak points in each density cluster, which are on the path from the start density cluster to the end of each branch.
-
-
-Example: Example data is a simulated dataset (s8971.mat, the dataset utilized here was from the material of [38]) which is charactered by 475 cells and 48 genes.
+1.	The main part of DensityPath is performed in R and the dependent packages has been listed in DensityPath.R script. All the dependencies will be automatically installed using the commands in the set_packages.R script.
+2.	The first dimension reduction part through PCA can be performed in after_pca.R file.
+3.  The code of dimension reduction part elastic embedding is available in the website of  Miguel  A ́.Carreira-Perpin ̃a ́n and can be downloaded in http://faculty.ucmerced.edu/mcarreira-perpinan/research/software/code-EE_SNE_tSNE.tar.gz, the usage of EE can refer to the examples. In our study, the script demo_COIL.m is adjusted to perform the dimension reduction as follows:
+  A.	The variable Y is the processed data after PCA via the after_pca() function and the useless variable Y0, M, t0 and t can be removed. Each row of Y represents a cell and each column means one gene.
+  B.	The variable Y needs to be normalized as Y0, which means:
+                                               Y = Y-min(Y(:));
+                                               Y = Y./max(Y(:));
+  C.	The calculation and normalization of the weights Wp and Wn are as in the code and the parameters do not change.
+  D.	To achieve the full convergence, we cancel the limitation of the running time and maximum iteration, which means we deleted the variable opts.runtime and opts.maxit.
+  E.	The variable l in the code is the parameter lambda in the objective function of elastic embedding. It was set to be 10 in our study while it’s user-specified parameter actually.
+4.	The data after dimension reduction elastic embedding now is the coordination of cells in 2-d space and it can be applied in the following DensityPath analysis. 
+  A.	The function densitypathimage() will output a 2×2 figure of DensityPath, which are the scatter plot of single cell points on the reduced-dimension 2-d space of gene expression after dimensionality reduction, density landscape, high density clusters and the cell state-transition path constructed by DensityPath on the 2-d density function heatmap plot, respectively.
+  B.	The function dens_bran_pseu() can figure out the cells in representative cell states (RCSs), the pseudo-branch of the points’ structure. With the prior knowledge of start cell, the function can still output the pseudo-time of each cell along the trajectory, the paths from the start RCS which is closest to the start cell to the end RCSs, and pseudo-order of each path from start RCS to one end RCS.
+  
